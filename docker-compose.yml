@@ -1,0 +1,38 @@
+version: "3"
+
+services:
+
+  application:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - ACTIVE_PROFILE=docker
+    ports:
+      - "8080:8080"
+    networks:
+      - development
+    depends_on:
+      - cassandra
+
+  cassandra:
+    build:
+      context: ./cassandra/
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - CASSANDRA_KEYSPACE=eleflow_challenge
+    ports:
+      - "9042:9042"
+    volumes:
+      - cassandra-data:/var/lib/cassandra
+      - cassandra-data:/home/cassandra/.cassandra
+    networks:
+      - development
+
+volumes:
+  cassandra-data:
+
+networks:
+  development:

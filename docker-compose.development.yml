@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+
+  cassandra:
+    build:
+      context: ./cassandra/
+      dockerfile: Dockerfile
+    environment:
+      - CASSANDRA_KEYSPACE=eleflow_challenge
+    ports:
+      - "9042:9042"
+    volumes:
+      - cassandra-data:/var/lib/cassandra
+      - cassandra-data:/home/cassandra/.cassandra
+
+volumes:
+  cassandra-data:

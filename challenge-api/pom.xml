@@ -3,14 +3,14 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.4.0</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<groupId>com.eleflow</groupId>
+		<artifactId>application</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
 	</parent>
+
 	<groupId>com.eleflow</groupId>
 	<artifactId>challenge-api</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>challenge-api</name>
 	<description>May the 4th be with you</description>
 
@@ -29,11 +29,26 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>io.projectreactor</groupId>
 			<artifactId>reactor-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+        <dependency>
+            <groupId>com.eleflow</groupId>
+            <artifactId>challenge-model</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-boot-starter</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
