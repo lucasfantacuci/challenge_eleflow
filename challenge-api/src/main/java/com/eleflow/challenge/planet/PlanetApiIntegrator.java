@@ -1,5 +1,6 @@
 package com.eleflow.challenge.planet;
 
+import com.eleflow.challenge.common.PageFromStarWarsApiDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
@@ -20,7 +21,7 @@ public class PlanetApiIntegrator {
         this.apiStarWarsBaseUrl = apiStarWarsEndpoint;
     }
 
-    public Mono<PlanetsFromApiDTO> findPaged(Integer page) {
+    public Mono<PageFromStarWarsApiDTO<PlanetFromApiDTO>> findPaged(Integer page) {
 
         WebClient webClient = this.createReactiveWebClient(this.apiStarWarsBaseUrl);
 
@@ -29,7 +30,7 @@ public class PlanetApiIntegrator {
                 .accept(MediaType.APPLICATION_JSON)
                 .acceptCharset(Charset.defaultCharset())
                 .retrieve()
-                .bodyToMono(PlanetsFromApiDTO.class)
+                .bodyToMono(PageFromStarWarsApiDTO.class)
                 .map(this::replaceLinkUrl);
     }
 
@@ -42,7 +43,7 @@ public class PlanetApiIntegrator {
                 .accept(MediaType.APPLICATION_JSON)
                 .acceptCharset(Charset.defaultCharset())
                 .retrieve()
-                .bodyToMono(PlanetsFromApiDTO.class)
+                .bodyToMono(PageFromStarWarsApiDTO.class)
                 .map(this::countHowManyMoviesWasShowed);
 
     }
@@ -57,14 +58,14 @@ public class PlanetApiIntegrator {
                 .build();
     }
 
-    private PlanetsFromApiDTO replaceLinkUrl(PlanetsFromApiDTO response) {
+    private PageFromStarWarsApiDTO replaceLinkUrl(PageFromStarWarsApiDTO response) {
         if (response.next != null) response.next = response.next.replace("http://swapi.dev/api/planets/", "planets/starwars-api");
         if (response.previous != null) response.previous = response.previous.replace("http://swapi.dev/api/planets/", "planets/starwars-api");
         return response;
     }
 
-    private BigInteger countHowManyMoviesWasShowed(PlanetsFromApiDTO response) {
-        if (Integer.valueOf(response.count) >= 1) return BigInteger.valueOf(response.planets.get(0).films.size());
+    private BigInteger countHowManyMoviesWasShowed(PageFromStarWarsApiDTO response) {
+        if (Integer.valueOf(response.count) >= 1) return BigInteger.valueOf(((PlanetFromApiDTO) response.results.get(0)).films.size());
         return BigInteger.ZERO;
     }
 }

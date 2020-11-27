@@ -1,6 +1,5 @@
 package com.eleflow.challenge.planet
 
-import org.springframework.data.cassandra.core.query.CassandraPageRequest
 import org.springframework.data.cassandra.repository.AllowFiltering
 import org.springframework.data.cassandra.repository.Query
 import org.springframework.data.cassandra.repository.ReactiveCassandraRepository
@@ -15,9 +14,9 @@ import java.util.*
 interface PlanetRepository : ReactiveCassandraRepository<PlanetEntity, UUID> {
 
     @AllowFiltering
-    fun findByName(name: String, page: CassandraPageRequest) : Flux<Slice<PlanetEntity>>;
+    fun findByName(name: String, page: Pageable) : Flux<Slice<PlanetEntity>>;
 
     @AllowFiltering
     @Query("select * from planet")
-    fun findAll(page: Pageable): Flux<Slice<PlanetEntity>>
+    fun findAllPaged(page: Pageable): Flux<Slice<PlanetEntity>>
 }

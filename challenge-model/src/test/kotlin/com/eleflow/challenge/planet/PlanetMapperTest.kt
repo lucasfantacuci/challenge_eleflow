@@ -6,6 +6,7 @@ import com.eleflow.challenge.terrain.Terrain
 import com.eleflow.challenge.terrain.TerrainNameIsEmptyException
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import org.springframework.data.domain.SliceImpl
 import java.math.BigInteger
 import java.util.*
 
@@ -76,5 +77,23 @@ class PlanetMapperTest {
         Assertions.assertThrows(TerrainNameIsEmptyException::class.java) {
             mapper.toModel(planetEntity);
         };
+    }
+
+    @Test
+    fun givenASliceOfPlanetEntity_whenMappingItToPlanetyModelWithAllCorrectParams_shouldNotThrowAnyException() {
+
+        val mapper = PlanetMapper();
+
+        val planetEntity = PlanetEntity(UUID.randomUUID(), "Tatooine", BigInteger.ONE,"arid", "desert");
+        val planets = ArrayList<PlanetEntity>();
+        planets.add(planetEntity);
+
+        val sliceOfPlanetEntity = SliceImpl(planets);
+        val sliceOfPlanetModel = mapper.toModelSlice(sliceOfPlanetEntity);
+
+        Assertions.assertEquals(sliceOfPlanetEntity.pageable, sliceOfPlanetModel.pageable);
+        Assertions.assertEquals(sliceOfPlanetEntity.size, sliceOfPlanetModel.size);
+        Assertions.assertEquals(sliceOfPlanetEntity.hasNext(), sliceOfPlanetModel.hasNext());
+
     }
 }

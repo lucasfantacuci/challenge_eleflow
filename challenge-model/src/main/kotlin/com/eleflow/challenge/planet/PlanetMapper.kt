@@ -2,6 +2,9 @@ package com.eleflow.challenge.planet
 
 import com.eleflow.challenge.climate.Climate
 import com.eleflow.challenge.terrain.Terrain
+import org.springframework.data.domain.Slice
+import org.springframework.data.domain.SliceImpl
+import java.util.stream.Collectors
 
 class PlanetMapper {
 
@@ -22,4 +25,13 @@ class PlanetMapper {
                 Climate(entity.climate),
                 Terrain(entity.terrain));
     }
+
+    fun toModelSlice(slice: Slice<PlanetEntity>) : Slice<Planet> {
+        return SliceImpl(
+                slice.content.stream().map(this::toModel).collect(Collectors.toList()),
+                slice.pageable,
+                slice.hasNext()
+        )
+    }
+
 }

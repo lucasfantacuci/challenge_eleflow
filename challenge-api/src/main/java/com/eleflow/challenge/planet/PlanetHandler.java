@@ -2,6 +2,7 @@ package com.eleflow.challenge.planet;
 
 
 import com.eleflow.challenge.climate.Climate;
+import com.eleflow.challenge.common.PageFromStarWarsApiDTO;
 import com.eleflow.challenge.terrain.Terrain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Slice;
@@ -24,7 +25,7 @@ public class PlanetHandler {
         this.planetApiIntegrator = planetApiIntegrator;
     }
 
-    public void createPlanet(CreatePlanetDTO createPlanetDTO) {
+    public void handleCreatePlanet(CreatePlanetDTO createPlanetDTO) {
 
         Mono<BigInteger> monoNumberOfMoviesShowed = this.planetApiIntegrator.findHowManyMoviesTheNamedPlanetWasShowed(createPlanetDTO.name);
 
@@ -41,7 +42,7 @@ public class PlanetHandler {
         return this.planetService.findAll(page, size);
     }
 
-    public Mono<PlanetsFromApiDTO> handleFindPagedPlanetsFromAPI(Integer page) {
+    public Mono<PageFromStarWarsApiDTO<PlanetFromApiDTO>> handleFindPagedPlanetsFromAPI(Integer page) {
         return this.planetApiIntegrator.findPaged(page);
     }
 

@@ -1,14 +1,20 @@
 package com.eleflow.challenge.planet;
 
+import com.eleflow.challenge.common.PageFromStarWarsApiDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Slice;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @RestController
+@Validated
 @RequestMapping("/planet")
 public class PlanetRouter {
 
@@ -19,8 +25,9 @@ public class PlanetRouter {
     }
 
     @PostMapping
-    public void createPlanetAsync(@RequestBody CreatePlanetDTO createPlanetDTO){
-        this.planetHandler.createPlanet(createPlanetDTO);
+    @ResponseStatus(code = HttpStatus.ACCEPTED)
+    public void createPlanetAsync(@RequestBody @NotNull @Valid CreatePlanetDTO createPlanetDTO){
+        this.planetHandler.handleCreatePlanet(createPlanetDTO);
     }
 
     @GetMapping
@@ -32,7 +39,7 @@ public class PlanetRouter {
     }
 
     @GetMapping("/starwars-api")
-    public Mono<PlanetsFromApiDTO> findPlanetsFromAPI(@RequestParam(value = "page", defaultValue = "1", required = false) Integer page){
+    public Mono<PageFromStarWarsApiDTO<PlanetFromApiDTO>> findPlanetsFromAPI(@RequestParam(value = "page", defaultValue = "1", required = false) Integer page){
         return this.planetHandler.handleFindPagedPlanetsFromAPI(page);
     }
 

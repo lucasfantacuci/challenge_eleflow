@@ -1,9 +1,11 @@
 package com.eleflow.challenge.planet;
 
+import javax.validation.constraints.NotNull;
+
 public class CreatePlanetDTO {
 
-    public String name;
-    public String climate;
-    public String terrain;
+    @NotNull public String name;
+    @NotNull public String climate;
+    @NotNull public String terrain;
 
 }

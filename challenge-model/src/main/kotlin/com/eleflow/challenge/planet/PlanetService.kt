@@ -5,15 +5,12 @@ import com.eleflow.challenge.terrain.Terrain
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.cassandra.core.query.CassandraPageRequest
 import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Slice
-import org.springframework.data.domain.SliceImpl
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import java.math.BigInteger
 import java.util.*
-import java.util.stream.Collectors
 
 @Service
 class PlanetService {
@@ -25,48 +22,28 @@ class PlanetService {
     }
 
     fun createPlanet(name: String, numberOfMoviesShowed: BigInteger, climate: Climate, terrain: Terrain) {
-        val mapper = PlanetMapper();
         val planet = Planet(name, numberOfMoviesShowed, climate, terrain);
-        this.planetRepository.save(mapper.toEntity(planet)).subscribe();
+        this.planetRepository.save(PlanetMapper().toEntity(planet)).subscribe();
     }
 
     fun findAll(page: Int, size: Int): Flux<Slice<Planet>> {
-        val mapper = PlanetMapper();
-
-        val pageRequest = CassandraPageRequest.of(page, 10);
+        val pageRequest = PageRequest.of(page, size);
         return this.planetRepository
-                .findAll(pageRequest).map {
-                    sliceOfPlanetEntity ->
-                    SliceImpl(
-                            sliceOfPlanetEntity.content.stream().map { planetEntity -> mapper.toModel(planetEntity) }.collect(Collectors.toList()),
-                            sliceOfPlanetEntity.pageable,
-                            sliceOfPlanetEntity.hasNext()
-                    )};
+                .findAllPaged(pageRequest).map(PlanetMapper()::toModelSlice);
     }
 
     fun findByName(name: String, page: Int, size: Int): Flux<Slice<Planet>> {
-        val mapper = PlanetMapper();
-
-        val pageRequest = CassandraPageRequest.of(page, size);
-
+        val pageRequest = PageRequest.of(page, size);
         return this.planetRepository
-            .findByName(name, pageRequest).map {
-                sliceOfPlanetEntity ->
-                    SliceImpl(
-                        sliceOfPlanetEntity.content.stream().map { planetEntity -> mapper.toModel(planetEntity) }.collect(Collectors.toList()),
-                        sliceOfPlanetEntity.pageable,
-                        sliceOfPlanetEntity.hasNext()
-                    )};
+            .findByName(name, pageRequest).map(PlanetMapper()::toModelSlice);
     }
 
     fun find(id: UUID): Mono<Planet> {
-        val mapper = PlanetMapper();
-        return this.planetRepository.findById(id).map {
-            planet -> mapper.toModel(planet);
-        }
+        return this.planetRepository.findById(id).map(PlanetMapper()::toModel);
     }
 
     fun deletePlanet(id: UUID) : Mono<Void> {
         return this.planetRepository.deleteById(id);
     }
+
 }
