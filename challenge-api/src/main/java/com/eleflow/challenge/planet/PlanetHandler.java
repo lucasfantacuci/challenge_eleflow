@@ -4,6 +4,7 @@ package com.eleflow.challenge.planet;
 import com.eleflow.challenge.climate.Climate;
 import com.eleflow.challenge.terrain.Terrain;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -44,8 +45,8 @@ public class PlanetHandler {
         return this.planetApiIntegrator.findPaged(page);
     }
 
-    public Flux<Planet> handleFindPlanetsByName(String name) {
-        return this.planetService.findByName(name);
+    public Flux<Slice<Planet>> handleFindPlanetsByName(String name, Integer page, Integer size) {
+        return this.planetService.findByName(name, page, size);
     }
 
     public Mono<Planet> handleFindPlanetsById(UUID id) {

@@ -38,13 +38,4 @@ class Planet (id: UUID, name: String, numberOfMoviesShowed: BigInteger, climate:
     fun getTerrain(): String {
         return this.terrain.getName();
     }
-
-    override fun equals(other: Any?): Boolean {
-        return this.id == other;
-    }
-
-    override fun hashCode(): Int {
-        return this.id.hashCode()
-    }
-
 }

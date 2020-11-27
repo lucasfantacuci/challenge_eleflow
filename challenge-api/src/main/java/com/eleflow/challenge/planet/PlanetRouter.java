@@ -1,6 +1,7 @@
 package com.eleflow.challenge.planet;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -23,9 +24,12 @@ public class PlanetRouter {
     }
 
     @GetMapping
-    public Flux<Planet> findPlanets(@RequestParam(value = "name", defaultValue = "", required = false) String name){
-        if (!name.isBlank()) return this.planetHandler.handleFindPlanetsByName(name);
-        return this.planetHandler.handleFindPlanetsFromDatabase();
+    public Flux<Slice<Planet>> findPlanets(@RequestParam(value = "name", defaultValue = "", required = false) String name,
+                                           @RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
+                                           @RequestParam(value = "size", defaultValue = "0", required = false) Integer size){
+        if (!name.isBlank()) return this.planetHandler.handleFindPlanetsByName(name, page, size);
+        //return this.planetHandler.handleFindPlanetsFromDatabase();
+        return this.planetHandler.handleFindPlanetsByName("", page, size);
     }
 
     @GetMapping("/starwars-api")

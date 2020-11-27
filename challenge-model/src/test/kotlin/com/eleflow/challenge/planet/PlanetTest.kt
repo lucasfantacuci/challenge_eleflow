@@ -5,6 +5,7 @@ import com.eleflow.challenge.terrain.Terrain
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.math.BigInteger
+import java.util.*
 
 class PlanetTest {
 
@@ -13,7 +14,7 @@ class PlanetTest {
         val climate = Climate("arid");
         val terrain = Terrain("desert");
         val numberOfMoviesShowed : BigInteger = BigInteger.ONE;
-//        Assertions.assertThrows(PlanetNameIsEmptyException::class.java) { Planet("", numberOfMoviesShowed, climate, terrain) };
+        Assertions.assertThrows(PlanetNameIsEmptyException::class.java) { Planet("", numberOfMoviesShowed, climate, terrain) };
     }
 
     @Test
@@ -26,12 +27,11 @@ class PlanetTest {
 
         val climate = Climate(arid);
         val terrain = Terrain(desert);
-       // val planet = Planet(tatooine, numberOfMoviesShowed, climate, terrain);
+        val planet = Planet(tatooine, numberOfMoviesShowed, climate, terrain);
 
-        //Assertions.assertEquals(tatooine, planet.getName());
-        //Assertions.assertEquals(BigInteger.ONE, planet.getNumberOfMoviesShowed());
-        //Assertions.assertEquals(arid, planet.getClimate());
-        //Assertions.assertEquals(desert, planet.getTerrain());
+        Assertions.assertEquals(tatooine, planet.getName());
+        Assertions.assertEquals(BigInteger.ONE, planet.getNumberOfMoviesShowed());
+        Assertions.assertEquals(arid, planet.getClimate());
+        Assertions.assertEquals(desert, planet.getTerrain());
     }
-
 }
