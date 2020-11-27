@@ -30,12 +30,18 @@ class PlanetService {
         this.planetRepository.save(mapper.toEntity(planet)).subscribe();
     }
 
-    fun findAll(): Flux<Planet> {
+    fun findAll(page: Int, size: Int): Flux<Slice<Planet>> {
         val mapper = PlanetMapper();
 
-        return this.planetRepository.findAll().map {
-            planetEntity -> mapper.toModel(planetEntity)
-        };
+        val pageRequest = CassandraPageRequest.of(page, 10);
+        return this.planetRepository
+                .findAll(pageRequest).map {
+                    sliceOfPlanetEntity ->
+                    SliceImpl(
+                            sliceOfPlanetEntity.content.stream().map { planetEntity -> mapper.toModel(planetEntity) }.collect(Collectors.toList()),
+                            sliceOfPlanetEntity.pageable,
+                            sliceOfPlanetEntity.hasNext()
+                    )};
     }
 
     fun findByName(name: String, page: Int, size: Int): Flux<Slice<Planet>> {
@@ -50,8 +56,7 @@ class PlanetService {
                         sliceOfPlanetEntity.content.stream().map { planetEntity -> mapper.toModel(planetEntity) }.collect(Collectors.toList()),
                         sliceOfPlanetEntity.pageable,
                         sliceOfPlanetEntity.hasNext()
-                    )
-            };
+                    )};
     }
 
     fun find(id: UUID): Mono<Planet> {

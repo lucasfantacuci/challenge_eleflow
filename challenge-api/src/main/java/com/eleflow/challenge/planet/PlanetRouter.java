@@ -26,10 +26,9 @@ public class PlanetRouter {
     @GetMapping
     public Flux<Slice<Planet>> findPlanets(@RequestParam(value = "name", defaultValue = "", required = false) String name,
                                            @RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
-                                           @RequestParam(value = "size", defaultValue = "0", required = false) Integer size){
+                                           @RequestParam(value = "size", defaultValue = "10", required = false) Integer size){
         if (!name.isBlank()) return this.planetHandler.handleFindPlanetsByName(name, page, size);
-        //return this.planetHandler.handleFindPlanetsFromDatabase();
-        return this.planetHandler.handleFindPlanetsByName("", page, size);
+        return this.planetHandler.handleFindPlanetsFromDatabase(page, size);
     }
 
     @GetMapping("/starwars-api")

@@ -37,8 +37,8 @@ public class PlanetHandler {
         });
     }
 
-    public Flux<Planet> handleFindPlanetsFromDatabase(){
-        return this.planetService.findAll();
+    public Flux<Slice<Planet>> handleFindPlanetsFromDatabase(Integer page, Integer size){
+        return this.planetService.findAll(page, size);
     }
 
     public Mono<PlanetsFromApiDTO> handleFindPagedPlanetsFromAPI(Integer page) {
